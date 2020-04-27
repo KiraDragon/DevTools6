@@ -107,6 +107,11 @@ namespace Snake
                      Console.ForegroundColor = ConsoleColor.DarkRed;
                      Console.Write("@");
                      break;
+                case 2:
+                    Console.SetCursorPosition(food.col, food.row);
+                     Console.ForegroundColor = ConsoleColor.Green;
+                     Console.Write("@");
+                     break;
                 default:
                     Console.SetCursorPosition(food.col, food.row);
                      Console.ForegroundColor = ConsoleColor.DarkBlue;
@@ -120,7 +125,7 @@ namespace Snake
         static public bool WinCondition(string username, int userpoints)
         {
                 // When the user gets 500 points, the user would win
-                if (userpoints >= 200)
+                if (userpoints >= 500)
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -230,7 +235,7 @@ namespace Snake
             // Loops the game till it ends
             while (mainloop)
             {
-                int determiner = randomNumbersGenerator.Next(2);
+                int determiner = randomNumbersGenerator.Next(3);
                 userPoints = (snakeElements.Count - 4) * 100 - negativePoints;
                 Console.SetCursorPosition(0, 0);
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -310,6 +315,10 @@ namespace Snake
                         userPoints += 100; 
                     }
 
+                     if(determiner == 2)
+                    {
+                        userPoints += 150; 
+                    }
                     lastFoodTime = Environment.TickCount;
                     sleepTime--;
 
