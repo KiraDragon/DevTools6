@@ -231,6 +231,8 @@ namespace Snake
             }
 
             int userPoints = 0;
+            int time = 0;
+            int seconds = 15;
             bool mainloop = true; 
             // Loops the game till it ends
             while (mainloop)
@@ -241,6 +243,25 @@ namespace Snake
                 Console.ForegroundColor = ConsoleColor.Cyan;
 
                 Console.WriteLine("Score: " + userPoints + " ");
+
+                time++;
+                if (time % 10 == 0)
+                {
+                    seconds--;
+                    if (seconds == -1)
+                    {
+                        seconds = 15;
+                    }
+                }
+
+                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Green;
+                string thetimeTime = "Food time: ";
+                Console.WriteLine("\n");
+                Console.Write(new string(' ', (Console.WindowWidth - thetimeTime.Length) / 2));
+                Console.WriteLine(thetimeTime + seconds + " ");
+
+                
 
                 mainloop = WinCondition(userName, userPoints); 
 
@@ -307,17 +328,20 @@ namespace Snake
                     food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
                     if(determiner == 0)
                     {
-                        userPoints += 50; 
+                        userPoints += 50;
+                        seconds = 15;
                     }
 
                      if(determiner == 1)
                     {
-                        userPoints += 100; 
+                        userPoints += 100;
+                        seconds = 15;
                     }
 
                      if(determiner == 2)
                     {
-                        userPoints += 150; 
+                        userPoints += 150;
+                        seconds = 15;
                     }
                     lastFoodTime = Environment.TickCount;
                     sleepTime--;
