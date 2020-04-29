@@ -143,30 +143,35 @@ namespace Snake
                 }
         }
 
-        static public bool GameOver( List<Position> obstacles, Queue<Position> snakeElements, Position snakeNewHead, int userpoints, string username)
+        // When snake use up 3 lives, console will show "Game over!" and the total amount of points gathered
+        static public bool RealGameOver(List<Position> obstacles, Queue<Position> snakeElements, Position snakeNewHead, int userpoints, string username)
         {
-             // When snake hits the obstacle or the snake itself, console will show "Game over!" and the total amount of points gathered
-                if (snakeElements.Contains(snakeNewHead) || obstacles.Contains(snakeNewHead))
-                {
-                    Console.SetCursorPosition(0, 0);
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    string gameover = "Game over!";
-                    Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
-                    Console.Write(new string(' ', (Console.WindowWidth - gameover.Length) / 2));
-                    Console.WriteLine(gameover);
-                    if (userpoints < 0) userpoints = 0;
-                    userpoints = Math.Max(userpoints, 0);
-                    SaveScore(username, userpoints); 
-                    string finalPoints = "Your points are: {0}";
-                    Console.Write(new string(' ', (Console.WindowWidth - finalPoints.Length) / 2));
-                    Console.WriteLine(finalPoints, userpoints);
-                    Console.ReadLine(); 
-                    return false;
-                }
-                else
-                {
-                    return true; 
-                }
+                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                string gameover = "Game over!";
+                Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
+                Console.Write(new string(' ', (Console.WindowWidth - gameover.Length) / 2));
+                Console.WriteLine(gameover);
+                if (userpoints < 0) userpoints = 0;
+                userpoints = Math.Max(userpoints, 0);
+                SaveScore(username, userpoints); 
+                string finalPoints = "Your points are: {0}";
+                Console.Write(new string(' ', (Console.WindowWidth - finalPoints.Length) / 2));
+                Console.WriteLine(finalPoints, userpoints);
+                Console.ReadLine(); 
+                return false;
+        }
+
+        //Show the player how many lives that snake reamin
+        static public void Lives(int lives)
+        {
+                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor = ConsoleColor.Red;
+                string live = "Remain lives: " + lives;
+                Console.WriteLine("\n\n");
+                //Console.Write(new string(' ', (Console.WindowWidth - live.Length) / 2));
+                Console.WriteLine(live);
+                //return true;
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -207,6 +212,7 @@ namespace Snake
             Random randomNumbersGenerator = new Random();
             Console.BufferHeight = Console.WindowHeight;
             lastFoodTime = Environment.TickCount;
+            int lives = 3;
 
             List<Position> obstacles = MakeObstacles(randomNumbersGenerator); 
 
@@ -243,6 +249,7 @@ namespace Snake
                 Console.ForegroundColor = ConsoleColor.Cyan;
 
                 Console.WriteLine("Score: " + userPoints + " ");
+                Lives(lives);
 
                 time++;
                 if (time % 10 == 0)
@@ -302,7 +309,26 @@ namespace Snake
                 if (snakeNewHead.row >= Console.WindowHeight) snakeNewHead.row = 0;
                 if (snakeNewHead.col >= Console.WindowWidth) snakeNewHead.col = 0;
 
-                mainloop = GameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName); 
+                //Replace mainloop = GameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName) with below code; 
+                if (snakeElements.Contains(snakeNewHead) || obstacles.Contains(snakeNewHead))
+                {
+                    //int lives = 3;
+                    lives = lives - 1;
+                    if (lives == 0)
+                    {
+                        mainloop =  RealGameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName);
+                        //return false;
+                    }
+                    else
+                    {
+                        Lives(lives);
+                        mainloop = true;
+                    }
+                }
+                else
+                {
+                    mainloop = true; 
+                }
 
                 // Draws the snake's first body after the snake head in every frame
                 Console.SetCursorPosition(snakeHead.col, snakeHead.row);
