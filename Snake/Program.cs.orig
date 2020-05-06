@@ -157,7 +157,8 @@ namespace Snake
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    string gameover = "Game over!";
+                    string 
+					= "Game over!";
                     Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
                     Console.Write(new string(' ', (Console.WindowWidth - gameover.Length) / 2));
                     Console.WriteLine(gameover);

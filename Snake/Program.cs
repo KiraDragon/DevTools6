@@ -20,6 +20,22 @@ namespace Snake
             this.col = col;
         }
     }
+    //Introduces enums that control gamestate
+    public enum GameState
+    {
+		InMainMenu,
+		Start,
+		Help, 
+		ScorePage
+    }
+
+      public enum Level
+    {
+		One,
+        Two,
+        Three,
+        End
+    }
 
     class Program
     {
@@ -122,24 +138,46 @@ namespace Snake
             return food; 
         }
 
-        static public bool WinCondition(string username, int userpoints)
+        static public Level WinCondition(string username, int userpoints, Level level)
         {
-                // When the user gets 500 points, the user would win
-                if (userpoints >= 500)
+                if(level == Level.One && userpoints >= 100)
                 {
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
-                    string youwin = "YOU WIN!";
+                    string youwin = "PASS LEVEL 1!";
+                    Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
+                    Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
+                    Console.WriteLine(youwin);
+                    Console.ReadLine();
+                    return Level.Two; 
+                }
+                else if(level == Level.Two && userpoints >= 200)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    string youwin = "PASS LEVEL 2!";
+                    Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
+                    Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
+                    Console.WriteLine(youwin);
+                    Console.ReadLine();
+                    return Level.Three; 
+                }
+                // When the user gets 1000 points, the user would win
+                else if (level == Level.Three && userpoints >= 300)
+                {
+                    Console.SetCursorPosition(0, 0);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    string youwin = "PASS LEVEL 3! YOU WIN!";
                     Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
                     Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
                     Console.WriteLine(youwin);
                     SaveScore(username, userpoints); 
                     Console.ReadLine();
-                    return false;
+                    return Level.End; 
                 }
                 else
                 {
-                    return true; 
+                    return level; 
                 }
         }
 
@@ -187,6 +225,7 @@ namespace Snake
 
         static void Main(string[] args)
         {
+
             PlayMusic(); 
   			//intialise different variable
             byte right = 0;
@@ -207,200 +246,295 @@ namespace Snake
                 new Position(1, 0), // down
                 new Position(-1, 0), // up
             };
+            GameState state = GameState.InMainMenu; 
+            Level level = Level.One; 
             double sleepTime = 100;
             int direction = right;
             Random randomNumbersGenerator = new Random();
             Console.BufferHeight = Console.WindowHeight;
             lastFoodTime = Environment.TickCount;
             int lives = 3;
-
-            List<Position> obstacles = MakeObstacles(randomNumbersGenerator); 
-
-			//Declare a new variable snakeElements
-            Queue<Position> snakeElements = new Queue<Position>();
-			//Initialise the length of the snake
-            for (int i = 0; i <= 3; i++)
+            while(true)
             {
-                snakeElements.Enqueue(new Position(0, i));
-            }
-            
-            // Creates new food at a random position (as long as the position has not been taken by an obstacles or the snake)
-            
-            Position food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, 0); 
-
-            // Redraws the snake
-            foreach (Position position in snakeElements)
-            {
-                Console.SetCursorPosition(position.col, position.row);
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write("*");
-            }
-
-            int userPoints = 0;
-            int time = 0;
-            int seconds = 15;
-            bool mainloop = true; 
-            // Loops the game till it ends
-            while (mainloop)
-            {
-                int determiner = randomNumbersGenerator.Next(3);
-                userPoints = (snakeElements.Count - 4) * 100 - negativePoints;
-                Console.SetCursorPosition(0, 0);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-
-                Console.WriteLine("Score: " + userPoints + " ");
-                Lives(lives);
-
-                time++;
-                if (time % 10 == 0)
+                if(state == GameState.Start)
                 {
-                    seconds--;
-                    if (seconds == -1)
-                    {
-                        seconds = 15;
-                    }
-                }
+                    List<Position> obstacles = MakeObstacles(randomNumbersGenerator); 
 
-                Console.SetCursorPosition(0, 0);
-                Console.ForegroundColor = ConsoleColor.Green;
-                string thetimeTime = "Food time: ";
-                Console.WriteLine("\n");
-                Console.Write(new string(' ', (Console.WindowWidth - thetimeTime.Length) / 2));
-                Console.WriteLine(thetimeTime + seconds + " ");
+			        //Declare a new variable snakeElements
+                    Queue<Position> snakeElements = new Queue<Position>();
+			        //Initialise the length of the snake
+                    for (int i = 0; i <= 3; i++)
+                    {
+                        snakeElements.Enqueue(new Position(0, i));
+                    }
+            
+                    // Creates new food at a random position (as long as the position has not been taken by an obstacles or the snake)
+            
+                    Position food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, 0); 
+
+                    // Redraws the snake
+                    foreach (Position position in snakeElements)
+                    {
+                        Console.SetCursorPosition(position.col, position.row);
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("*");
+                    }
+
+                    int userPoints = 0;
+                    int time = 0;
+                    int seconds = 15;
+                    bool mainloop = true; 
+                    // Loops the game till it ends
+                    while (mainloop)
+                    {
+                
+                        int determiner = randomNumbersGenerator.Next(3);
+                        userPoints = (snakeElements.Count - 4) * 100 - negativePoints;
+                        Console.SetCursorPosition(0, 0);
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+
+                        Console.WriteLine("Score: " + userPoints + " ");
+                        Lives(lives);
+
+                        time++;
+                        if (time % 10 == 0)
+                        {
+                            seconds--;
+                            if (seconds == -1)
+                            {
+                                seconds = 15;
+                            }
+                        }
+
+                        Console.SetCursorPosition(0, 0);
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        string thetimeTime = "Food time: ";
+                        Console.WriteLine("\n");
+                        Console.Write(new string(' ', (Console.WindowWidth - thetimeTime.Length) / 2));
+                        Console.WriteLine(thetimeTime + seconds + " ");
 
                 
 
-                mainloop = WinCondition(userName, userPoints); 
+                        level = WinCondition(userName, userPoints, level); 
 
-                // Increment 1
-                negativePoints++;
+                        // Increment 1
+                        negativePoints++;
 
-                // Detects key inputs to change direction 
-                if (Console.KeyAvailable)
-                {
-                    ConsoleKeyInfo userInput = Console.ReadKey();
-                    if (userInput.Key == ConsoleKey.LeftArrow)
-                    {
-                        if (direction != right) direction = left;
-                    }
-                    if (userInput.Key == ConsoleKey.RightArrow)
-                    {
-                        if (direction != left) direction = right;
-                    }
-                    if (userInput.Key == ConsoleKey.UpArrow)
-                    {
-                        if (direction != down) direction = up;
-                    }
-                    if (userInput.Key == ConsoleKey.DownArrow)
-                    {
-                        if (direction != up) direction = down;
+                        // Detects key inputs to change direction 
+                        if (Console.KeyAvailable)
+                        {
+                            ConsoleKeyInfo userInput = Console.ReadKey();
+                            if (userInput.Key == ConsoleKey.LeftArrow)
+                            {
+                                if (direction != right) direction = left;
+                            }
+                            if (userInput.Key == ConsoleKey.RightArrow)
+                            {
+                                if (direction != left) direction = right;
+                            }
+                            if (userInput.Key == ConsoleKey.UpArrow)
+                            {
+                                if (direction != down) direction = up;
+                            }
+                            if (userInput.Key == ConsoleKey.DownArrow)
+                            {
+                                if (direction != up) direction = down;
+                            }
+                        }
+
+                        Position snakeHead = snakeElements.Last();  // Sets the last element of the snake as the snake head 
+                        Position nextDirection = directions[direction]; // Sets the direction the snake is moving
+
+                        Position snakeNewHead = new Position(snakeHead.row + nextDirection.row,
+                            snakeHead.col + nextDirection.col); // Sets the new position of snake head based on the snake's direction 
+                
+                        // Makes the snake come out from the other side of the window when it passes through the edge of the window 
+                        if (snakeNewHead.col < 0) snakeNewHead.col = Console.WindowWidth - 1;
+                        if (snakeNewHead.row < 0) snakeNewHead.row = Console.WindowHeight - 1;
+                        if (snakeNewHead.row >= Console.WindowHeight) snakeNewHead.row = 0;
+                        if (snakeNewHead.col >= Console.WindowWidth) snakeNewHead.col = 0;
+
+                        //Replace mainloop = GameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName) with below code; 
+                        if (snakeElements.Contains(snakeNewHead) || obstacles.Contains(snakeNewHead))
+                        {
+                            //int lives = 3;
+                            lives = lives - 1;
+                            if (lives == 0)
+                            {
+                                mainloop =  RealGameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName);
+                                state = GameState.InMainMenu; 
+                            }
+                            else
+                            {
+                                Lives(lives);
+                                mainloop = true;
+                            }
+                        }
+                        else
+                        {
+                            mainloop = true; 
+                        }
+
+                        // Draws the snake's first body after the snake head in every frame
+                        Console.SetCursorPosition(snakeHead.col, snakeHead.row);
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.Write("*");
+
+                        // Adds the snake head into the snake element
+                        snakeElements.Enqueue(snakeNewHead);
+
+                        // Draws the snake head depending on which way the snake is facing
+                        Console.SetCursorPosition(snakeNewHead.col, snakeNewHead.row);
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        if (direction == right) Console.Write(">");
+                        if (direction == left) Console.Write("<");
+                        if (direction == up) Console.Write("^");
+                        if (direction == down) Console.Write("v");
+                
+                        if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
+                        {
+                            Console.Beep(); 
+                            //If the snake's head intercepts the location of the food
+                            // feeding the snake
+                            food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
+
+                            if(determiner == 0)
+                            {
+                                userPoints += 50;
+                                seconds = 15;
+                            }
+
+                             if(determiner == 1)
+                            {
+                                userPoints += 100;
+                                seconds = 15;
+                            }
+
+                             if(determiner == 2)
+                            {
+                                userPoints += 150;
+                                seconds = 15;
+                            }
+                            lastFoodTime = Environment.TickCount;
+                            sleepTime--;
+
+                            MakeNewObstacles(randomNumbersGenerator, obstacles, food, snakeElements); 
+                        }
+                        else
+                        {
+                            // moving...
+                            //Removes the last position of the snake by writing a space, pushing the snake forwards
+                            Position last = snakeElements.Dequeue();
+                            Console.SetCursorPosition(last.col, last.row);
+                            Console.Write(" ");
+                        }
+
+                        if (Environment.TickCount - lastFoodTime >= foodDissapearTime)
+                        {
+                            //If the time limit has expired, Negative points are increased by 50 
+                            negativePoints = negativePoints + 50;
+                            //Sets the cursor position to where the food was and deletes it by writing a space over it
+                            Console.SetCursorPosition(food.col, food.row);
+                            Console.Write(" ");
+                            food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
+                            //Resets the timer
+                            lastFoodTime = Environment.TickCount;
+                        }
+
+                        //Sets the cursor position to the new column and row with the food
+                        Console.SetCursorPosition(food.col - 1, food.row);
+
+                        sleepTime -= 0.01;
+
+                        Thread.Sleep((int)sleepTime);
+
+                        if(level == Level.End)
+                        {
+                            mainloop = false; 
+                            state = GameState.InMainMenu; 
+                        }
                     }
                 }
-
-                Position snakeHead = snakeElements.Last();  // Sets the last element of the snake as the snake head 
-                Position nextDirection = directions[direction]; // Sets the direction the snake is moving
-
-                Position snakeNewHead = new Position(snakeHead.row + nextDirection.row,
-                    snakeHead.col + nextDirection.col); // Sets the new position of snake head based on the snake's direction 
-                
-                // Makes the snake come out from the other side of the window when it passes through the edge of the window 
-                if (snakeNewHead.col < 0) snakeNewHead.col = Console.WindowWidth - 1;
-                if (snakeNewHead.row < 0) snakeNewHead.row = Console.WindowHeight - 1;
-                if (snakeNewHead.row >= Console.WindowHeight) snakeNewHead.row = 0;
-                if (snakeNewHead.col >= Console.WindowWidth) snakeNewHead.col = 0;
-
-                //Replace mainloop = GameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName) with below code; 
-                if (snakeElements.Contains(snakeNewHead) || obstacles.Contains(snakeNewHead))
+                else if(state == GameState.InMainMenu)
                 {
-                    //int lives = 3;
-                    lives = lives - 1;
-                    if (lives == 0)
+                   Console.Clear(); 
+                   Console.ForegroundColor = ConsoleColor.Red;
+                   Console.WriteLine("Snake");
+                   Console.ForegroundColor = ConsoleColor.Green;
+                   Console.WriteLine("Start");
+                   Console.WriteLine("Scoreboard");
+                   Console.WriteLine("Help");
+                   Console.WriteLine("Quit");
+                   Console.WriteLine("Type in the menu selection: ");
+                   string selection = Console.ReadLine().ToLower(); 
+                   if(selection == "start")
+                   {
+                       state = GameState.Start; 
+                       Console.Clear(); 
+                   }
+                   else if(selection == "help")
+                   {
+                       Console.Clear(); 
+                       state = GameState.Help; 
+                   }
+                   else if(selection == "scoreboard")
+                   {
+                       Console.Clear(); 
+                       state = GameState.ScorePage; 
+                   }
+                   else if(selection == "quit")
+                   {
+                        break; 
+                   }
+                   else
+                   {
+                       Console.WriteLine("Invalid Response");
+                   }
+                }
+                else if(state == GameState.Help)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("In this game, you play as a snake ( ***> )."); 
+                    Console.WriteLine("Your goal is to eat the food ( @ ) before they disappear to grow in length"); 
+                    Console.WriteLine("Dodge obstacles ( = ) and do not hit yourself or else you'll lose the game");
+                    Console.WriteLine("The score is added everytime a new food is ate, and is calculated totally at game over");
+                    Console.WriteLine("Good luck!");
+                    Console.WriteLine("Type back to go back to main menu...");
+                    string selection = Console.ReadLine().ToLower(); 
+                    if(selection == "back")
                     {
-                        mainloop =  RealGameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName);
-                        //return false;
+                       Console.Clear(); 
+                       state = GameState.InMainMenu; 
                     }
                     else
                     {
-                        Lives(lives);
-                        mainloop = true;
+                       Console.WriteLine("Invalid Response");
                     }
                 }
-                else
+                else if(state == GameState.ScorePage)
                 {
-                    mainloop = true; 
-                }
-
-                // Draws the snake's first body after the snake head in every frame
-                Console.SetCursorPosition(snakeHead.col, snakeHead.row);
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write("*");
-
-                // Adds the snake head into the snake element
-                snakeElements.Enqueue(snakeNewHead);
-
-                // Draws the snake head depending on which way the snake is facing
-                Console.SetCursorPosition(snakeNewHead.col, snakeNewHead.row);
-                Console.ForegroundColor = ConsoleColor.Gray;
-                if (direction == right) Console.Write(">");
-                if (direction == left) Console.Write("<");
-                if (direction == up) Console.Write("^");
-                if (direction == down) Console.Write("v");
-                
-                if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
-                {
-                    Console.Beep(); 
-                    //If the snake's head intercepts the location of the food
-                    // feeding the snake
-                    food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
-                    if(determiner == 0)
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Scoreboard"); 
+                    Console.WriteLine(); 
+                    string[] lines = File.ReadAllLines("../../scoreboard.txt", Encoding.UTF8);
+                    foreach(string line in lines)
                     {
-                        userPoints += 50;
-                        seconds = 15;
+                        Console.WriteLine(line); 
                     }
-
-                     if(determiner == 1)
+                    Console.WriteLine("Type back to go back to main menu...");
+                    string selection = Console.ReadLine().ToLower(); 
+                    if(selection == "back")
                     {
-                        userPoints += 100;
-                        seconds = 15;
+                       Console.Clear(); 
+                       state = GameState.InMainMenu; 
                     }
-
-                     if(determiner == 2)
+                    else
                     {
-                        userPoints += 150;
-                        seconds = 15;
+                       Console.WriteLine("Invalid Response");
                     }
-                    lastFoodTime = Environment.TickCount;
-                    sleepTime--;
-
-                    MakeNewObstacles(randomNumbersGenerator, obstacles, food, snakeElements); 
                 }
-                else
-                {
-                    // moving...
-                    //Removes the last position of the snake by writing a space, pushing the snake forwards
-                    Position last = snakeElements.Dequeue();
-                    Console.SetCursorPosition(last.col, last.row);
-                    Console.Write(" ");
-                }
-
-                if (Environment.TickCount - lastFoodTime >= foodDissapearTime)
-                {
-                    //If the time limit has expired, Negative points are increased by 50 
-                    negativePoints = negativePoints + 50;
-                    //Sets the cursor position to where the food was and deletes it by writing a space over it
-                    Console.SetCursorPosition(food.col, food.row);
-                    Console.Write(" ");
-                    food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
-                    //Resets the timer
-                    lastFoodTime = Environment.TickCount;
-                }
-
-                //Sets the cursor position to the new column and row with the food
-                Console.SetCursorPosition(food.col - 1, food.row);
-
-                sleepTime -= 0.01;
-
-                Thread.Sleep((int)sleepTime);
             }
         }
     }
