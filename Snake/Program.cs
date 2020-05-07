@@ -459,13 +459,14 @@ namespace Snake
                 {
                    Console.Clear(); 
                    Console.ForegroundColor = ConsoleColor.Red;
-                   Console.WriteLine("Snake");
+                   Console.WriteLine("\n <*** S N A K E ");
                    Console.ForegroundColor = ConsoleColor.Green;
-                   Console.WriteLine("Start");
-                   Console.WriteLine("Scoreboard");
-                   Console.WriteLine("Help");
-                   Console.WriteLine("Quit");
-                   Console.WriteLine("Type in the menu selection: ");
+                   Console.WriteLine("\n - Start");
+                   Console.WriteLine("\n - Scoreboard");
+                   Console.WriteLine("\n - Help");
+                   Console.WriteLine("\n - Quit");
+                   Console.WriteLine(" ");
+                   Console.WriteLine("Your selection: ");
                    string selection = Console.ReadLine().ToLower(); 
                    if(selection == "start")
                    {
@@ -496,10 +497,15 @@ namespace Snake
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("In this game, you play as a snake ( ***> )."); 
-                    Console.WriteLine("Your goal is to eat the food ( @ ) before they disappear to grow in length"); 
-                    Console.WriteLine("Dodge obstacles ( = ) and do not hit yourself or else you'll lose the game");
-                    Console.WriteLine("The score is added everytime a new food is ate, and is calculated totally at game over");
+                    Console.WriteLine(" "); 
+                    Console.WriteLine("Your goal is to eat the food ( @ ) before they disappear to grow in length");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("Dodge obstacles ( = ) and do not hit yourself or you'll lose a life, once your lives runs out, you lose.");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("The score is added each time a new food is eaten, and the final score is shown at game over");
+                    Console.WriteLine(" ");
                     Console.WriteLine("Good luck!");
+                    Console.WriteLine(" ");
                     Console.WriteLine("Type back to go back to main menu...");
                     string selection = Console.ReadLine().ToLower(); 
                     if(selection == "back")
