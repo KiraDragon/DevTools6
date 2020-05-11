@@ -145,9 +145,12 @@ namespace Snake
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
                     string youwin = "PASS LEVEL 1!";
+                    string _continue = "Press Enter to Continue";
                     Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
                     Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
                     Console.WriteLine(youwin);
+                    Console.Write(new string(' ', (Console.WindowWidth - _continue.Length) / 2));
+                    Console.WriteLine(_continue); 
                     Console.ReadLine();
                     return Level.Two; 
                 }
@@ -156,9 +159,12 @@ namespace Snake
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
                     string youwin = "PASS LEVEL 2!";
+                    string _continue = "Press Enter to Continue";
                     Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
                     Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
                     Console.WriteLine(youwin);
+                    Console.Write(new string(' ', (Console.WindowWidth - _continue.Length) / 2));
+                    Console.WriteLine(_continue); 
                     Console.ReadLine();
                     return Level.Three; 
                 }
@@ -168,9 +174,12 @@ namespace Snake
                     Console.SetCursorPosition(0, 0);
                     Console.ForegroundColor = ConsoleColor.Red;
                     string youwin = "PASS LEVEL 3! YOU WIN!";
+                    string _continue = "Press Enter to Continue";
                     Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n");
                     Console.Write(new string(' ', (Console.WindowWidth - youwin.Length) / 2));
                     Console.WriteLine(youwin);
+                    Console.Write(new string(' ', (Console.WindowWidth - _continue.Length) / 2));
+                    Console.WriteLine(_continue); 
                     SaveScore(username, userpoints); 
                     Console.ReadLine();
                     return Level.End; 
@@ -258,6 +267,7 @@ namespace Snake
             {
                 if(state == GameState.Start)
                 {
+                    Console.Clear(); 
                     List<Position> obstacles = MakeObstacles(randomNumbersGenerator); 
 
 			        //Declare a new variable snakeElements
@@ -359,7 +369,7 @@ namespace Snake
                         {
                             //int lives = 3;
                             lives = lives - 1;
-                            if (lives == 0)
+                            if (lives <= 0)
                             {
                                 mainloop =  RealGameOver(obstacles, snakeElements, snakeNewHead, userPoints, userName);
                                 state = GameState.InMainMenu; 
@@ -393,7 +403,7 @@ namespace Snake
                 
                         if (snakeNewHead.col == food.col && snakeNewHead.row == food.row)
                         {
-                            Console.Beep(); 
+                            Console.Beep();  
                             //If the snake's head intercepts the location of the food
                             // feeding the snake
                             food = MakeFood(randomNumbersGenerator, obstacles, snakeElements, determiner);
